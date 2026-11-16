@@ -22,6 +22,7 @@ const portal = require("../controllers/student-portal.controller");
 const certificates = require("../controllers/certificates.controller");
 const mailCtrl = require("../controllers/mail.controller");
 const files = require("../controllers/files.controller");
+const passwordReset = require("../controllers/password-reset.controller");
 const eitherAuth = require("../middleware/either-auth");
 const { loginLimiter, sensitiveLimiter, mailLimiter } = require("../middleware/security");
 
@@ -29,6 +30,9 @@ const router = express.Router();
 
 // Public
 router.post("/auth/login", loginLimiter, authCtrl.login);
+router.post("/auth/forgot", sensitiveLimiter, passwordReset.sendCode);
+router.post("/auth/forgot/verify", sensitiveLimiter, passwordReset.verifyCode);
+router.post("/auth/forgot/reset", sensitiveLimiter, passwordReset.resetPassword);
 
 // Uploaded images: admin or student token required (served by the web app on behalf of a signed-in user)
 router.get("/photos/:name", eitherAuth, files.photo);
